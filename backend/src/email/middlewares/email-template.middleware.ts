@@ -13,21 +13,21 @@ import {
 } from '@core/services'
 import { EmailTemplateService } from '@email/services'
 import { StoreTemplateOutput } from '@email/interfaces'
-  
+
 
 /**
  * Store template subject and body in email template table.
  * If an existing csv has been uploaded for this campaign but whose columns do not match the attributes provided in the new template,
  * delete the old csv, and prompt user to upload a new csv.
- * @param req 
- * @param res 
- * @param next 
+ * @param req
+ * @param res
+ * @param next
  */
 const storeTemplate = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
     const { campaignId } = req.params
     const { subject, body, reply_to: replyTo } = req.body
-    const { check, numRecipients, valid, updatedTemplate }: StoreTemplateOutput = 
+    const { check, numRecipients, valid, updatedTemplate }: StoreTemplateOutput =
         await EmailTemplateService.storeTemplate({ campaignId: +campaignId, subject, body, replyTo })
     if (check?.reupload) {
       return res.status(200)
@@ -59,7 +59,7 @@ const storeTemplate = async (req: Request, res: Response, next: NextFunction): P
           },
         })
     }
-     
+
   } catch (err) {
     if (err instanceof HydrationError || err instanceof TemplateError) {
       return res.status(400).json({ message: err.message })
@@ -67,22 +67,23 @@ const storeTemplate = async (req: Request, res: Response, next: NextFunction): P
     return next(err)
   }
 }
-  
+
 /**
  * Downloads the file from s3 and checks that its columns match the attributes provided in the template.
  * If a template has not yet been uploaded, do not write to the message logs, but prompt the user to upload a template first.
- * If the template and csv do not match, prompt the user to upload a new file. 
- * @param req 
- * @param res 
- * @param next 
+ * If the template and csv do not match, prompt the user to upload a new file.
+ * @param req
+ * @param res
+ * @param next
  */
 const uploadCompleteHandler = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
   try {
     const { campaignId } = req.params
+    logger.info(`uploadComplete handler loaded for ${campaignId}`)
 
     // switch campaign to invalid - this is for the case of uploading over an existing file
     await CampaignService.setInvalid(+campaignId)
-  
+
     // extract s3Key from transactionId
     const { 'transaction_id': transactionId, filename } = req.body
     let s3Key: string
@@ -91,7 +92,7 @@ const uploadCompleteHandler = async (req: Request, res: Response, next: NextFunc
     } catch (err) {
       return res.status(400).json(err.message)
     }
-  
+
     // check if template exists
     const emailTemplate = await EmailTemplateService.getFilledTemplate(+campaignId)
     if (emailTemplate === null){
@@ -99,13 +100,14 @@ const uploadCompleteHandler = async (req: Request, res: Response, next: NextFunc
         message: 'Template does not exist, please create a template',
       })
     }
-    
+
     // Updates metadata in project
     await CampaignService.updateCampaignS3Metadata({ key: s3Key, campaignId, filename })
-  
+
     // carry out templating / hydration
     // - download from s3
     try {
+      logger.info(`trying testHydration for campaign=${campaignId}`)
       const { records, hydratedRecord } = await EmailTemplateService.client.testHydration({
         campaignId: +campaignId,
         s3Key,
@@ -113,14 +115,18 @@ const uploadCompleteHandler = async (req: Request, res: Response, next: NextFunc
         templateBody: emailTemplate.body as string,
         templateParams: emailTemplate.params as string[],
       })
-  
+
+      logger.info(`before check hasInvalidEmailRecipient; campaignId=${campaignId}`)
       if (EmailTemplateService.hasInvalidEmailRecipient(records)) throw new InvalidRecipientError()
-      
+      logger.info(`after check hasInvalidEmailRecipient; campaignId=${campaignId}`)
+
       const recipientCount: number = records.length
-       
+
       // START populate template
+      logger.info(`before addToMessageLogs; campaignId=${campaignId}`)
       await EmailTemplateService.addToMessageLogs(+campaignId, records)
-  
+      logger.info(`after addToMessageLogs; campaignId=${campaignId}`)
+
       return res.json({
         'num_recipients': recipientCount,
         preview: {
@@ -129,7 +135,7 @@ const uploadCompleteHandler = async (req: Request, res: Response, next: NextFunc
           reply_to: emailTemplate.replyTo || null,
         },
       })
-  
+
     } catch (err) {
       logger.error(`Error parsing file for campaign ${campaignId}. ${err.stack}`)
       throw err
@@ -141,7 +147,7 @@ const uploadCompleteHandler = async (req: Request, res: Response, next: NextFunc
     return next(err)
   }
 }
-  
+
 export const EmailTemplateMiddleware = {
   storeTemplate,
   uploadCompleteHandler,

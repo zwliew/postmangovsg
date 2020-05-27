@@ -18,12 +18,12 @@ export default class TemplateClient {
   /**
    * Removes non-whitelisted html tags
    * Replaces new lines with html <br> so that the new lines can be displayed on the front-end
-   * @param value 
+   * @param value
    */
   replaceNewLinesAndSanitize(value: string): string {
     return xss.filterXSS(value.replace(/(\n|\r\n)/g,'<br/>'), this.xssOptions)
   }
-  
+
   // FIXME: handle edge case of x.y
 
   /**
@@ -40,13 +40,13 @@ export default class TemplateClient {
   } {
     const variables: Array<string> = []
     const tokens: Array<string> = []
-  
+
     /**
      * dict used for checking keys in lowercase
      * dict === {} if param === undefined
     */
     const dict = mapKeys(params, (_value, key) => key.toLowerCase())
-  
+
     try {
       const parseTree = (Sqrl.parse(templateBody, Sqrl.defaultConfig))
       parseTree.forEach((astObject: AstObject) => {
@@ -65,35 +65,35 @@ export default class TemplateClient {
              * - coerce to lowercase for comparison
             */
             const key = templateObject.c?.toLowerCase()
-  
+
             if (key !== undefined) {
-  
+
               if (key.length === 0) {
                 throw new TemplateError('Blank template variable provided')
               }
-  
+
               // only allow alphanumeric template, prevents code execution
               const keyHasValidChars = (key.match(/[^a-zA-Z0-9]/) === null)
               if (!keyHasValidChars) {
                 throw new TemplateError(`Invalid characters in param named {{${key}}}. Only alphanumeric characters allowed.`)
               }
-  
+
               // add key regardless, note that this is also returned in lowercase
               variables.push(key)
-              
+
               // if no params continue with the loop
               if (!params) return
-  
+
               // if params provided == attempt to carry out templating
               if (dict[key]) {
                 const templated = dict[key]
                 tokens.push(templated)
                 return
               }
-  
+
               // recipient key must have param
               if (key === 'recipient') throw new TemplateError(`Param ${templateObject.c} not found`)
-  
+
             } else { // I have not found an edge case that trips this yet
               logger.error(`Templating error: templateObject.c of ${templateObject} is undefined.`)
               throw new TemplateError('TemplateObject has no content')
@@ -122,8 +122,8 @@ export default class TemplateClient {
 
   /**
    * Replaces attributes in the template with the parameters specified in the csv
-   * @param templateBody 
-   * @param params 
+   * @param templateBody
+   * @param params
    */
   template(templateBody: string, params: { [key: string]: string }): string {
     const parsed = this.parseTemplate(templateBody, params)
@@ -134,8 +134,8 @@ export default class TemplateClient {
 
   /**
    * Ensures that the csv contains all the columns necessary to replace the attributes in the template
-   * @param csvRecord 
-   * @param templateParams 
+   * @param csvRecord
+   * @param templateParams
    */
   private checkTemplateKeysMatch(csvRecord: { [key: string]: string }, templateParams: Array<string>): void {
     // if body exists, smsTemplate.params should also exist
@@ -148,7 +148,7 @@ export default class TemplateClient {
   /**
    * Ensures that the csv contains all the columns necessary to replace the attributes in the template.
    * Returns a message formed from the template and parameters specified in the csv.
-   * @param param0 
+   * @param param0
    */
   async testHydration({
     campaignId,
@@ -164,9 +164,11 @@ export default class TemplateClient {
     templateParams: Array<string>;
   }): Promise<TestHydrationResult> {
     const s3Client = new S3Client()
+    logger.info(`s3Client initialised for campaign=${campaignId}`)
     const downloadStream = s3Client.download(s3Key)
+    logger.info(`downloadStream created for campaign=${campaignId}`)
     const fileContents = await s3Client.parseCsv(downloadStream)
-  
+
     const records: Array<MessageBulkInsertInterface> = fileContents.map(
       (entry) => {
         return {
@@ -176,20 +178,27 @@ export default class TemplateClient {
         }
       }
     )
-  
+    logger.info(`fileContents.map complete for campaignId=${campaignId}`)
+
     // attempt to hydrate
     const firstRecord = fileContents[0]
     this.checkTemplateKeysMatch(firstRecord, templateParams)
-  
+
+    logger.info(`checkTemplateKeysMatch complete for campaignId=${campaignId}`)
+
     const hydratedRecord = { body: this.template(templateBody, records[0].params) } as { body: string; subject?: string }
-  
+
+    logger.info(`hydratedRecord created for campaignId=${campaignId}`)
+
     if (templateSubject) {
       hydratedRecord.subject = this.template(templateSubject, records[0].params)
     }
-  
+
+    logger.info(`hydratedRecord.subject templated for campaignId=${campaignId}`)
+
     return {
       records,
       hydratedRecord,
     }
   }
-} 
+}
