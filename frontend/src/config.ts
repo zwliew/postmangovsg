@@ -25,7 +25,8 @@ if (missingEnvVars.length>0){
 // axios global defaults
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL as string
 axios.defaults.withCredentials = true
-axios.defaults.timeout = 10000 // 10s
+// axios.defaults.timeout = 10000 // 10s
+axios.defaults.timeout = 120000 // 120s / 2 min
 
 export const GUIDE_URL = process.env.REACT_APP_GUIDE_URL as string
 export const GUIDE_CREDENTIALS_URL = process.env.REACT_APP_GUIDE_CREDENTIALS_URL as string
