@@ -2,15 +2,16 @@ import axios, { AxiosError } from 'axios'
 
 export async function uploadFileWithPresignedUrl(uploadedFile: File, presignedUrl: string): Promise<void> {
   try {
+    // eslint-disable-next-line no-console
     console.time('uploadStart')
     const s3AxiosInstance = axios.create({
       withCredentials: false,
-      timeout: 120000
+      timeout: 120000,
     })
     await s3AxiosInstance.put(presignedUrl, uploadedFile, {
       headers: { 'Content-Type': uploadedFile.type },
     })
-    // await axios.request({method: 'PUT', timeout: 0, url: presignedUrl})
+    // eslint-disable-next-line no-console
     console.timeEnd('uploadStart')
     return
   } catch (e) {
