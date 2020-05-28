@@ -1,17 +1,43 @@
 language: node_js
 node_js:
-  - lts/*
-
+- lts/*
 services:
-  - docker
+- docker
+env:
+  global:
+    # AWS_ACCESS_KEY_ID
+    - secure: "CTv8CdTpsNeDNSQ59so6MBrIMTm2fhigB8MQ0kod/Zv2LxpZDxjrzDqnnw+CqHfEb0m9x7rZu8r9xj9O3mZK4lCgwq/cd+XTN4VXhU3U9XfAkpwWYV3bA22th6JVJ1jLmf6v9yB56Nag+qhB2ZUGH9NW3IUVPY05e91Ui5c1BuXC0ruJ2ouQaf40qnjdXMBzDn05TJ7dErwqUqY7RvymkffmS7/Z0gVV7pUrj67Xw6SZKgfPaI1MEBHcC1TjkE0teoytsv90s8WkR5Fvm9xw3VRtZi4gLkUIl/mE+uexNSmQkX3Lhoe1aoCSrUZvsHt2/JgNhBERIPS2S13q/dv6yVlHsHfvtUrjHyq2fDPIgeRbI3yrlyLJGVsf4QWQG2tnrCRwjcn2LRVAbhkI9fcpgxAYQ3JAlesC4Yp6v2XW7aZ0gsvZG3uUTn5Tocjww3aZvBIVenPCC9WnL1BFZgzxhgjS0RCxx/JRi2f7g0P9r+pME2ysQk2G3koNv3BrVtHqao76K0y9eFBNJ+rUWVpbORGpudK2Z4qnWL1WKPYnNmP6yotuDSEwyrfxBdgvwhDQom/MKC2kKmjykWz6001G+ZvYiIloMKR1TIiulZFl8/QRdXbgxkvmlgaPoyku6Dd9IQkWpY8HrA1xCslv2R6r8IGVbjpm0LO2O7AvUOMx5pA="
 
-# Skip the automatic npm ci step 
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "TR5OYAo2Zx0mCTH5CN6rZzleOuWJ2zn+wDmuVbfJQrqjroyjSVn75oeqzl5Qk95pfWyk8zZZ5Nif9mYHPJ4ioAHoesCKPLWc+/7CjSN+Nn8/UnEn5fVtpEzuctwDSk5e9uN6+xW7md6Ych0mG3EldRuusF8P+pXxow4G1TjazdR+dG6oTCVuTqbtqmC2xcy0DVTtodKbQkk2hN65x7O2/BocUntrtofjc8Vczp5lqtCGS55U65zAaXdddAGBB2tAEcmOa5afWr5avH1URECNEKs4xixn0Q+52pbAePn8gBZA5PNFeRWTcfUpzbo1qG8TxMTK8OnFaiUqG1qdIgxiKJaJio/jwNiqD3ntanHh7A5xh/fbvjZVr8alhMD1ljVncHuPtDDbMZMakLBEyhU8qjsLMrkOZh8XqCj+sHuYhFmidDTg2OEHYq05UgcU+koU7g/UwJxBCX7uUpeViNhK9sHjoHF1FtgmAD0DIzFmteyXX83VvJS0Bi+8DTB4lBOSzsAgP93N3rjvXZcwtFbsCcaocxtIwi5FQwWVcG1B5KsGcqBDdf4u6b0qOWdf/XHknxMfaueEfxXnQ14vJlO2wFntelTTqDF5qpJnOvdbuBJ6FOAJ+MWDZobHJEilo88HAk2nNIooZfk9WTCAyw5TxFhS/NKTUkdRxMhwAKol3wo="
+
+    # AWS_DEFAULT_REGION
+    - secure: "a+8TVpA0WXoPA/8nUaH8tFlsIXsioRjFagl6qVzBd8MkWaKsTnF7N8qpwzE8eAaySNwGUDIVEkKV4vMKrPsN+ZcrGvn1vNC3b2xf0/q/HOb2fmsGr7aT+eWJtPUp1zI1IrZXzwBKiQJh5PgawV/UygqgbcKy8yIh+7dGXFJ0u6thhqvwcAfSkU6GyRelgcpBzyQ2DnL+xDw9cb94XuKRYuTU7Yce+QYzRlsfZuNDuPCkzd2y386IUDXe15ECkKpWz5p24z7BR2YDa3ohVj7TlRerFNErhebUjOE0HiZ9I1fVmH7MyC+x6Kv9pJCkf1HvawOTOBHjz6fu+S9crQ0hJ2XnDaQVlD53CcZdkxblAqGyrfdl46RapnSd4jkjGFBCrGgcXRhFNtoQbn+s73dHXIf/gLMqk9MDESfogJFwyzyxsUhdSb0M2c3ouZPA2Ty9kal5T3fT32DQEuH3tD4e9o+OfRb4DFEn3LpVsYQM3nbeSJf10RbsU9ZePTvNg9XJ3RcL656NW7w3U8CyBPBkXvDNLxuA0NLaQ6FhHd96P9nlUc5R6lPZRAByO90aceKSf28PzKsRhf2JTUSKms8tlT5H8XWnYDEosqfckiKT8xA/P5n/+UxJBAJoLRx4+dptt0xZ9/6RVwAyXVszxk9C27Sl59EIseBE3YH4+3/YJEU="
+
+    # POSTMAN_AUTHORIZER_ROLE
+    - secure: "tiafGx8mKqvm6M6RD/LyAA3Wf0/rQMFRGpMWR/LZk6Mbjzm02i1mvLQlPLyScAKPSOHEFbxJFF6grcr8kCgIh1zSe98u1QJ2HKBfGq7+aSmm8hZP8IdGqQIVZGkMC+m+AEZc8JwS4ojt1+aHrWexwH5rODPhko2zVfkqWbmdafUkRnr7EWpiO42JTdxZkREqnH1MbhLDf2Mv6ox6tcDgRROre4NZgxGqayz/LsV85PNdxIiD+zsU5tQN0owD8AsYzdPfqqPucCVWzccnNBXl8+R0haFesK5fWmHUFAAtwespetmLD1JG36cIyE7MIMaujyBNdOvVX5yJdWXenCaEPgWj3ft/jlBl1UfjVCunC5ENCWM8HGvH78NNyS+krktILR77/1uEGRszn4etG5KTbeCexxDUsTB/p7x0fY+BJ7r5jV5QeKYC4PseW5n6qCLzntLo+M4wHvr2fCTfk9GewCfffWcbXxbSeag+v4AdumCgMLniJmkEtYwNRgIpt6iav5CpzF0FXdCSvgXtO9zzKecKrJgryCZU4CY8Zz5WaR0RDcq44Q+8/cfdU+RNFrBW1qFQr7UkSf91lm/1gnd6kfJOuP0WHRsAMUapLaYkC6bZWOR1frwEY6V/oi7O70p9+gMDmoYeMzVzX97yueFlHhbfok7x+HeMUd0MF+/BG3Q="
+
+    # PRODUCTION_DB_URI
+    - secure: "fugckGZ2B1i0fK0cc5GOEbWwjvYaGapGEUscD0Fv4zZm/rs9tTHCxPZ0YwenjBLXBOJXhRcaIAxwlZQ7GjRlTCs6BDKevXY8DC5J/ksfjkDmMXNWWQfAsJf9secRg89FtJn1EKI1UECrmk/7//MLbccUeGz63ct8KadckJUG1Br7aMpdsVs0IYaiK02vLpovLWtZbj+vybmfNMbG306/ZT+f8ajsRt/BWp2su/f9kRFoQ7iHS5RIndSVyioPpU5tHy3CosmYr9XPVcEEsjsN4euoPQekpFpKBm6BGTKg6hR/MN8VBU9g3dAJuRR5gzj0+5qKkW/SzSvUuQ8aw7MnNH/X/Sb3B2sC9BMWxZvw5slaF/QUnCm7Lia5lrj4H2QQGcClwjRznw8W04pz2bHvVSjozAXJryur0XPfG6411vWWg1p9G88VjluyY9c0GSuOGGo/4aI8I9ljAxFtuVQKgOAynU0FUoPx7huu3yBKWrMbgE/oJ0hfw1ehH9OebXI8zBfAmOs9Lx+2PdDPpV7VONrsvtYuDREvtMPeOoXmlCUvLMfPcHiQvOiz87MbaO2LtBskHq/8vfJRmWtzuVRPLWc4c53YNhaq3k7RIv7d2iYBsOIzCid9d1FXxr7pF9kbXrpuvlXbm509TMvceVkI4abpG1ytv1gKIocRP8/tKEw="
+
+    # PRODUCTION_TWILIO_CALLBACK_SECRET
+    - secure: "qp5OtpzYGHyeE9rSVU8imofy8BiPpVtrfrCJ9YlJY1RAOGNRZdBngaE4xNgnric/WdbDuZM6acj3F7T+FlnT+h8ugOv0fFAoKjLR+juMDu7weohDlq+Yflm7+369aJWoQpUc6relqDN6qprqQgVWYYwphl977dGeicdscnaCmatXtQd7uo7Zyqgbly82eGfGaIPINDED7CdMA6b6VTjUHk73K2Wk4meH+W5Orj1ACb1JNfmp0D+8nH+t8lb4LN1Tq/8KUpqpKpXUWBKMnPUEVmXamM0zJ5xIg+2fDSyVxP2xwwlK84GXtvmiQMu3ofWI75u+JwHYDw/ED2BSFAtyV+aDyDMt8TnMgw5fNsgHZ2vjrCZvhtagX8vDQMBP+jDFyoC+90dQ/tsrV87vWfUQQ7ePSVsJV5XB+LmgUp1hclXv59F9TuL/EXfTiJcvu6pkYRR+YKQVxO9SrBhNo+HUBuZjFL5J8ydhNcN8ETuInQprHzCT9F+mUioaNadMzKR5QibXewoHTkFwVcLL3zhuz9TeDh8PSvt8fxg/uUAyiS7F9TZj476bO1tR6h8ViXyL1TWza8vQa5VGZZtUz94xrAN99i68C4mVSSY4d/GlmvUAeeyI+k70F/K947Zr4veB68fCOIjjF5YSVwSpJ22itRj4md2I9RjQ7xfyW+8POFE="
+
+    # PRODUCTION_TWILIO_CALLBACK_ROLE
+    - secure: "ON94G14Yo2FWuFnrfymmV9qQx+C/aIEi9M6POPS9UZMxVd/onXPWm2B7AEu9wC8Ldz7x5TDmxLINAE6SFSCQAgBq3Tves2BDO1VMxZVTUV3sWz85srAj15rBl90oso4G9zMgIaDpZAl0GxTW+l/cnq+xltNFDPL7kcthJSZThtagHLbz+xm8GGXpEjrnCiJpXgWV9x3r1PrJ66SFMl20naxV/kFjT1uVPGfKSHEPchvqhXNkvABj7Z8+aOWBHBiFwFdU8VMXvS/zUNbZWR0yr7vzDR5DkLxtTzJLBjRps69cxKU0COt3faovFYBzvAzR62EWoqiKudofDt/aN+XWPqbvCL0+9LfJlSYkeVyB5vB+V0Kx4gKzIDAKzqMRw7WjvtuJD0vYou6et8lCnXqRYWYdoAm0HFo5gH5Jx4TUtRONZPNf8ry/Uft+SRWzZleeLtIF11O+sLXR7SfEL8B4hyq/6/yKbhKmnORrooQxOmQifddPdA1Allbh3332Lto8S4loMuz0YSEyxJx8rfeRmc1uvCGjlezg9k2L/R077of8iPR1v6g8HTqfmy9HidiWgH85+ddfXoclDwbEeLsR9SwtXbZon/MLUh+7IQkdh+5gj5dsi2nbc3jgd8U+oNOLPHPbeNjtTTR1jSucCLSASHwHjLS0sRNq0GNMBQ2ImE0="
+
+    # STAGING_DB_URI
+    - secure: "dTrxXlhfCXTUb6HY/hZylSMkWFd87l2YvsTr29RO9QMlGybfxQTWbOP0Po2L7ZBNRuM3+krAC7vfyukPrE4crtuGYjYuwYXpxNv+P5fUKXDyuCNI23N3oJdweROcI0sA5DKyxAPwy1nYz7iU3hgCG2z79oKCIGsvHBEoTWHSoAkpUo2wUX3n63xgcfJHoGMxykxkO2vSNP5pkqUUs6khr57FJi+v1Hfi74dxZAvGqhjKxOoLJQahYyOZdYwMIq94uC5n/vTEDyhF9Z2L4mNX+lChN7pJUYKyB/s/OKInbx6uwWDc5o6weHpJ873SWl8nThabCWOSDjKAvHzK0aJjrhaM1EI2H+a1JfeLxkaRULGfySs8y45BztzFuXD9h89IqL8Y/g4d0PZuCNS2QSIGiqk6zRlMqZFj0n+YnWo8hMBE4tWOwF9Q+/trJbnwk4ubj154hrNEqR7gTa82n9mdDaYchtOt9NcJ3m97GBm9xptYa2KCL4F/kFDpuOmsYzUlyqRvlkAKwVHZvt30sWqVmU2udQLnMtaY4rQLvY7xPEu2XjldMx1XMeWkZC8Zm6JmgifgB5cCHQXAL1P2ZVNFeJMP1cbNk0/U0brA7mRlnj1VNV81/3KnqxyCCLWe7DnkaVBWLUD9Lje28QDKcPPg0q6qZC4gEkVV/0vRVwWQNUY="
+
+    # STAGING_TWILIO_CALLBACK_SECRET
+    - secure: "o4gEoM9CyByrlZyRipYApgIjHg4huLg2NIET0wwi9cUlLJfHm/BQ8EW1apVJoLJEBY2F+bSbpj06q/SYssMYJDvbUaEzMafL60crYvag9Et7TzJRpWsss2t79/Ez1zDO+GrH6BHXy+Yf/TLqD7021gLWzB7GMNV1D+yyCZnIYdfdnjfunQTY+VAsevc8CAFnlPHstDMbfpKbSODFy8bR+q9zSVAX/IWtCFiDhp4mYALu6+Y99NSWNby72buqQwkUlrvB5T5bAtHoM6BwJ5IabZhs5gAdA5bYCVrQmPc6vv2fVO8sMB/6d5R1Gmi7tiegX3Z3E51aqZanlcC4ae169Dp8XnKmTE7PJuyqLnSOW6k5UAcsGBB7cbVpRXUNlnspYF+8TAYy3OzxRrXueW8f6xiEprDEaUG2a3eDZSkr3roEZFYfSVQkvwEfE5fCvpHYWdHWs55GjMOVKsp+T38Rx1c6afHu20erlPQxKuiFPiwmJ+kS18Njy8udasyTSJ2m3rFTtrZaGpMgJTz3qmIwrlyHbx8UVdYnNAWK9Mjcn1lQhItzrgGePPMpJPi0rmHbDS87SBms3z5jUOEwsNbbuWEK1tdxWBrLVt9y/MrTv2T+Rioo8u2JwzVEz7kRS+tWe0aNqH7NCIuWOZC4zkmpGl5FB/HMh+1HXhkr8chVw+4="
+
+    # STAGING_TWILIO_CALLBACK_ROLE
+    - secure: "IF/55PcBaWW1iij8P8Q32DYqyr5S3kgcA6c0wLKaNjS2NSwRR5PQt9h5zb9S0r0IbdxAC+YZrtnRQcHXsvaquV9DGsVrkD+FtywNiCnPZHRJ+JIDbPGa3IpbLe0lkIdrIUGo0byrOap7qW6K3fAEGYI1wrPNBvKzqmTPKN89eBFbKlIdQPZCjEhF9pWVaDqxR7SfvHmKXjjB4jc8xll71VLwJYyFV6jx9zFeClkxrIG2kf85P50OxV9RTbFNQULH2iVYdSwtgYTYPJrBxubLifUh5qTurm+m2OP4jRHTGD5t7y8w/J+MEihu7XyZ6ywDch7rFlEaWij+09KqT40B1D/UqaIXpKG7IX9Lb9AQgrMzfj+yltuW//jttiaP4DGQo7SHC7v5689UqhDFL6LmTiYtsCSuDrIhFPiaT9mQgGFRsOd4IM+kavool5+VqGzEgrSwLMImhNSGV/r+kbpvAa/PQ2RIuCa0iB6fbSSJ/KCYabCl5XiSP+N0G+woHLh3E9K4FgjTH3TduOOiEgo6zBuRGERfm2OfuEI3BAcrPNostHmyMOqQfJMjS0De6dEpyEKNTbOlFqAhoTfnZmzOxqsObZ2YMmoEa81lT8RFPdvutMz8m0wL8DdEhKaWdMANY1SytPx53Xej/kw80cR6iWgxcA0YlMHvbZpuYhMauFs="
 install: skip
 cache:
   directories:
     - frontend/node_modules
-
-# Deploy from Dockerfile
 jobs:
   include:
   - name: backend
@@ -23,37 +49,37 @@ jobs:
     deploy:
       - provider: elasticbeanstalk
         skip_cleanup: true
-        access_key_id: $AWS_ACCESS_KEY_ID
-        secret_access_key: $AWS_SECRET_ACCESS_KEY
-        region: $AWS_DEFAULT_REGION
-        app: "postmangovsg-backend"
-        env: "postmangovsg-backend-staging"
-        bucket_name: "postmangovsg-backend-elasticbeanstalk"
+        access_key_id: "$AWS_ACCESS_KEY_ID"
+        secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+        region: "$AWS_DEFAULT_REGION"
+        app: postmangovsg-backend
+        env: postmangovsg-backend-staging
+        bucket_name: postmangovsg-backend-elasticbeanstalk
         on:
-          branch: $STAGING_BRANCH
+          branch: "$STAGING_BRANCH"
       - provider: elasticbeanstalk
         skip_cleanup: true
-        access_key_id: $AWS_ACCESS_KEY_ID
-        secret_access_key: $AWS_SECRET_ACCESS_KEY
-        region: $AWS_DEFAULT_REGION
-        app: "postmangovsg-backend"
-        env: "postmangovsg-backend-prod"
-        bucket_name: "postmangovsg-backend-elasticbeanstalk"
+        access_key_id: "$AWS_ACCESS_KEY_ID"
+        secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+        region: "$AWS_DEFAULT_REGION"
+        app: postmangovsg-backend
+        env: postmangovsg-backend-prod
+        bucket_name: postmangovsg-backend-elasticbeanstalk
         on:
-          branch: $PRODUCTION_BRANCH
+          branch: "$PRODUCTION_BRANCH"
   - name: worker
     before_script:
       - cd worker
     deploy:
       - provider: script
-        script: ./deploy.sh postmangovsg-workers staging-sending staging-logger
+        script: "./deploy.sh postmangovsg-workers staging-sending staging-logger"
         on:
-          branch: $STAGING_BRANCH
+          branch: "$STAGING_BRANCH"
           condition: "$DEPLOY_WORKER = true"
       - provider: script
-        script: ./deploy.sh postmangovsg-workers prod-sending prod-logger
+        script: "./deploy.sh postmangovsg-workers prod-sending prod-logger"
         on:
-          branch: $PRODUCTION_BRANCH
+          branch: "$PRODUCTION_BRANCH"
           condition: "$DEPLOY_WORKER = true"
   - name: frontend
     before_install:
@@ -72,41 +98,41 @@ jobs:
     deploy:
       - provider: lambda
         function_name: log-twilio-callback-staging
-        region: $AWS_DEFAULT_REGION
-        role: $STAGING_TWILIO_CALLBACK_ROLE
+        region: "$AWS_DEFAULT_REGION"
+        role: "$STAGING_TWILIO_CALLBACK_ROLE"
         runtime: nodejs12.x
         module_name: build/index
         handler_name: handler
         timeout: 30
         publish: true
         zip: "../log-twilio-callback/code.zip"
-        environment_variables:
+        environment:
           - TWILIO_CALLBACK_SECRET=$STAGING_TWILIO_CALLBACK_SECRET
           - DB_URI=$STAGING_DB_URI
         on:
-          branch: $STAGING_BRANCH
+          branch: "$STAGING_BRANCH"
       - provider: lambda
         function_name: log-twilio-callback-production
-        region: $AWS_DEFAULT_REGION
-        role: $PRODUCTION_TWILIO_CALLBACK_ROLE
+        region: "$AWS_DEFAULT_REGION"
+        role: "$PRODUCTION_TWILIO_CALLBACK_ROLE"
         runtime: nodejs12.x
         module_name: build/index
         handler_name: handler
         timeout: 30
         publish: true
         zip: "../log-twilio-callback/code.zip"
-        environment_variables:
+        environment:
           - TWILIO_CALLBACK_SECRET=$PRODUCTION_TWILIO_CALLBACK_SECRET
           - DB_URI=$PRODUCTION_DB_URI
         on:
-          branch: $PRODUCTION_BRANCH
+          branch: "$PRODUCTION_BRANCH"
       - provider: lambda
         function_name: postman-api-gateway-authorizer
-        region: $AWS_DEFAULT_REGION
-        role: $POSTMAN_AUTHORIZER_ROLE
+        region: "$AWS_DEFAULT_REGION"
+        role: "$POSTMAN_AUTHORIZER_ROLE"
         runtime: nodejs12.x
         handler_name: handler
         publish: true
         zip: "../postman-api-gateway-authorizer/code.zip"
         on:
-          branch: $PRODUCTION_BRANCH
+          branch: "$PRODUCTION_BRANCH"
