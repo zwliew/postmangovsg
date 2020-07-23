@@ -7,6 +7,7 @@ import { ErrorBlock, PrimaryButton, TextButton } from 'components/common'
 import styles from './Unsubscribe.module.scss'
 import appLogo from 'assets/img/brand/app-logo.svg'
 import landingHero from 'assets/img/unsubscribe/request-unsubscribe.png'
+import cancelRequest from 'assets/img/unsubscribe/cancel-request.png'
 
 import {
   unsubscribeRequest,
@@ -19,6 +20,7 @@ const Unsubscribe = () => {
   const [errorMsg, setErrorMsg] = useState('')
   const [isValid, setValid] = useState(true)
   const [isUnsubscribed, setUnsubscribed] = useState(false)
+  const [isUnsubscribing, setUnsubscribing] = useState(true)
   const [campaignId, setCampaignId] = useState('')
   const [recipient, setRecipient] = useState('')
   const [hash, setHash] = useState('')
@@ -89,7 +91,22 @@ const Unsubscribe = () => {
     })
   }, [location.search, version])
 
+  function onStay() {
+    setUnsubscribing(false)
+  }
+
   function renderUnsubscribeSection() {
+    if (!isUnsubscribing) {
+      return (
+        <>
+          <h2>Excellent choice!</h2>
+          <p>
+            Thank you for staying subscribed to this campaign. Happy that we are
+            still keeping in touch.
+          </p>
+        </>
+      )
+    }
     if (isUnsubscribed) {
       return (
         <>
@@ -108,12 +125,10 @@ const Unsubscribe = () => {
             We will inform the agency that sent you this campaign about your
             wish to unsubscribe. You will be removed from their mailing list.
           </p>
-          <PrimaryButton
-            onClick={onConfirmation}
-            loadingPlaceholder="Processing"
-          >
-            Unsubscribe
-          </TextButton>
+          <div>
+            <PrimaryButton onClick={onStay}>I&#39;d rather stay</PrimaryButton>
+            <TextButton onClick={onConfirmation}>Unsubscribe me</TextButton>
+          </div>
         </>
       )
     }
@@ -125,7 +140,10 @@ const Unsubscribe = () => {
         <div className={styles.inner}>
           <>
             <img src={appLogo} />
-            <img src={landingHero} className={styles.landingHero} />
+            <img
+              src={isUnsubscribing ? landingHero : cancelRequest}
+              className={styles.landingHero}
+            />
             {renderUnsubscribeSection()}
             <ErrorBlock>{errorMsg}</ErrorBlock>
           </>
