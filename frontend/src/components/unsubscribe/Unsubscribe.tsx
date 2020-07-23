@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useParams, Redirect } from 'react-router-dom'
 import querystring from 'querystring'
 
-import { ErrorBlock, PrimaryButton } from 'components/common'
+import { ErrorBlock, PrimaryButton, TextButton } from 'components/common'
 
 import styles from './Unsubscribe.module.scss'
 import appLogo from 'assets/img/brand/app-logo.svg'
@@ -113,7 +113,7 @@ const Unsubscribe = () => {
             loadingPlaceholder="Processing"
           >
             Unsubscribe
-          </PrimaryButton>
+          </TextButton>
         </>
       )
     }
