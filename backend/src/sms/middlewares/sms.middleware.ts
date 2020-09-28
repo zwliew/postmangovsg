@@ -101,8 +101,10 @@ const validateAndStoreCredentials = async (
   const { credentials, credentialName } = res.locals
   try {
     if (campaignId) {
+      // FIXME: switch back
       // Sends first hydrated message from campaign
-      await SmsService.sendCampaignMessage(+campaignId, recipient, credentials)
+      //await SmsService.sendCampaignMessage(+campaignId, recipient, credentials)
+      await Promise.resolve()
     } else {
       // Sends generic validation message if campaignId not specified
       await SmsService.sendValidationMessage(recipient, credentials)
