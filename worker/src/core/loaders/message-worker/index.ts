@@ -2,7 +2,8 @@ import { expose } from 'threads/worker'
 import { Sequelize } from 'sequelize-typescript'
 import { QueryTypes } from 'sequelize'
 import get from 'lodash/get'
-import plimit from 'p-limit'
+// import plimit from 'p-limit'
+import bluebird from 'bluebird'
 require('module-alias/register') // to resolve aliased paths like @core, @sms, @email
 import config from '@core/config'
 import logger from '@core/logger'
@@ -150,19 +151,53 @@ const enqueueAndSend = async (): Promise<void> => {
   if (jobId && rate && credName && campaignId) {
     await service().setSendingService(credName)
     await enqueueMessages(jobId, campaignId)
-    const sendMessageLimit = plimit(rate)
+    // const sendMessageLimit = plimit(rate)
+    // let hasNext = true
+    // while (hasNext) {
+    //   const start = Date.now()
+    //   const messages = await getMessages(jobId, rate)
+    //   console.log(messages)
+    //   if (!messages[0]) {
+    //     hasNext = false
+    //   } else {
+    //     for (const message of messages) {
+    //       sendMessageLimit(() => {
+    //         sendMessage(message)
+    //       })
+    //     }
+    //     // Make sure at least 1 second has elapsed
+    //     const wait = Math.max(0, 1000 - (Date.now() - start))
+    //     await waitForMs(wait)
+    //     logger.info(
+    //       `${workerId}: jobId=${jobId} rate=${rate} numMessages=${messages.length} wait=${wait}`
+    //     )
+    //   }
+    // }
+
+    // Fail safe value so that the worker does not get stuck in the while loop.
+    // The worker will allow each promise an extra second to complete, and automatically complete the job even if not all promises have completed.
+    // let failSafe = sendMessageLimit.activeCount
+    // while (sendMessageLimit.pendingCount > 0 && failSafe > 0) {
+    //   await waitForMs(1000)
+    //   failSafe--
+    // }
+
     let hasNext = true
     while (hasNext) {
-      const start = Date.now()
       const messages = await getMessages(jobId, rate)
       if (!messages[0]) {
         hasNext = false
       } else {
-        for (const message of messages) {
-          sendMessageLimit(() => {
-            sendMessage(message)
-          })
-        }
+        const start = Date.now()
+        bluebird
+          .map(
+            messages,
+            (message) => {
+              sendMessage(message)
+            },
+            { concurrency: rate }
+          )
+          .timeout(5000)
         // Make sure at least 1 second has elapsed
         const wait = Math.max(0, 1000 - (Date.now() - start))
         await waitForMs(wait)
@@ -172,13 +207,6 @@ const enqueueAndSend = async (): Promise<void> => {
       }
     }
 
-    // Fail safe value so that the worker does not get stuck in the while loop.
-    // The worker will allow each promise an extra second to complete, and automatically complete the job even if not all promises have completed.
-    let failSafe = sendMessageLimit.activeCount
-    while (sendMessageLimit.pendingCount > 0 && failSafe > 0) {
-      await waitForMs(1000)
-      failSafe--
-    }
     await jobCanBeFinalized(jobId)
     await service().destroySendingService()
   }

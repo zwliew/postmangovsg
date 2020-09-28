@@ -24,6 +24,7 @@
     "aws-sdk": "^2.660.0",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
+    "bluebird": "^3.7.2",
     "convict": "^6.0.0",
     "dotenv": "^8.2.0",
     "libphonenumber-js": "^1.7.55",
@@ -45,7 +46,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.30",
+    "@types/bluebird": "^3.5.32",
     "@types/lodash": "^4.14.149",
     "@types/uuid": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
