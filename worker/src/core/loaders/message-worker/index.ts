@@ -182,6 +182,7 @@ const enqueueAndSend = async (): Promise<void> => {
     //   failSafe--
     // }
 
+    let cnt = 0
     let hasNext = true
     while (hasNext) {
       const messages = await getMessages(jobId, rate)
@@ -193,7 +194,9 @@ const enqueueAndSend = async (): Promise<void> => {
           .map(
             messages,
             (message) => {
+              logger.info(`${workerId}: jobId=${jobId} cnt=${cnt}`)
               sendMessage(message)
+              cnt++
             },
             { concurrency: rate }
           )
