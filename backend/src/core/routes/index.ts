@@ -3,6 +3,7 @@ import { celebrate, Joi, Segments } from 'celebrate'
 import { ChannelType } from '@core/constants'
 import { Campaign } from '@core/models'
 import { AuthMiddleware } from '@core/middlewares'
+import slowDown from 'express-slow-down'
 
 // Core routes
 import authenticationRoutes from './auth.routes'
@@ -147,9 +148,19 @@ router.use(
   settingsRoutes
 )
 
-router.use('/callback/email', emailCallbackRoutes)
+const callbackLimiter = slowDown({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  delayAfter: 120, // allow 120 requests per minute, then...
+  delayMs: 100, // begin adding 100ms of delay per request above 120
+  // request # 121 is delayed by  100ms
+  // request # 122 is delayed by 200ms
+  // request # 123 is delayed by 300ms
+  // etc.
+})
 
-router.use('/callback/sms', smsCallbackRoutes)
+router.use('/callback/email', callbackLimiter, emailCallbackRoutes)
+
+router.use('/callback/sms', callbackLimiter, smsCallbackRoutes)
 
 router.use('/callback/telegram', telegramCallbackRoutes)
 export default router
