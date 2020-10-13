@@ -222,7 +222,8 @@ const sendValidationMessage = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-  const { recipient, from } = req.body
+  const { recipient } = req.body
+  const { from } = res.locals
   try {
     await CustomDomainService.sendValidationMessage(recipient, from)
   } catch (err) {
