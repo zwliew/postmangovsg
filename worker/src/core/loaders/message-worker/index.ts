@@ -15,6 +15,7 @@ let connection: Sequelize,
   currentCampaignType: string,
   email: Email,
   sms: SMS
+let alive = true
 
 /**
  *  Different channel types operate on their own channel type tables.
@@ -95,7 +96,7 @@ const enqueueAndSend = async (): Promise<void>  => {
     await service().setSendingService(credName)
     await enqueueMessages(jobId)
     let hasNext = true
-    while (hasNext) {
+    while (hasNext && alive) {
       const messages = await getMessages(jobId, rate)
       if (!messages[0]) {
         hasNext = false
@@ -109,6 +110,10 @@ const enqueueAndSend = async (): Promise<void>  => {
       }
     }
     await service().destroySendingService()
+    if (!alive){
+      logger.info(`${workerId}: Worker exiting`)
+      process.exit(1)
+    }
   }
 }
 
@@ -127,13 +132,17 @@ const createAndResumeWorker = (): Promise<void> => {
     })
 }
 
-  
+const die = () => {
+  logger.info(`${workerId}: Worker received SIGINT`)
+  alive = false
+}
 const init = async (index: string, isLogger = false): Promise<any> => {
   await ECSUtil.load()
   workerId = ECSUtil.getWorkerId(index)
   connection = createConnection()
   email = new Email(workerId, connection)
   sms = new SMS(workerId, connection)
+ 
   try {
     if (!isLogger){
       await createAndResumeWorker()
@@ -151,16 +160,15 @@ const init = async (index: string, isLogger = false): Promise<any> => {
   catch (err) {
     return Promise.reject(err)
   }
-   
-    
-  
 }
   
 const messageWorker = {
   init,
+  die,
 }
 
 expose(messageWorker)
+
 
 export type MessageWorker = typeof messageWorker
 export default MessageWorker

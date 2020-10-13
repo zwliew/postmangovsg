@@ -4,5 +4,4 @@ const loaders = async (): Promise<void> => {
   await scriptLoader()
   await messageWorkerLoader()
 }
-
 export { loaders }
