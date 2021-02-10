@@ -42,12 +42,15 @@ async function exportKey(key: CryptoKey): Promise<ArrayBuffer> {
   return window.crypto.subtle.exportKey('raw', key)
 }
 
-export async function sha256(key: ArrayBuffer | string): Promise<string> {
+export async function sha256(
+  key: ArrayBuffer | string,
+  encoding = STRING_ENCODING // Default to base64 encoding.
+): Promise<string> {
   if (typeof key === 'string') {
     key = Buffer.from(key)
   }
   const hashedKey = await crypto.subtle.digest('SHA-256', key)
-  return Buffer.from(hashedKey).toString(STRING_ENCODING)
+  return Buffer.from(hashedKey).toString(encoding)
 }
 
 function encodeCipherToBase64(cipher: ArrayBuffer, iv: Uint8Array): string {
