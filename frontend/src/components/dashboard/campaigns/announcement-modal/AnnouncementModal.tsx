@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import cx from 'classnames'
 import { updateAnnouncementVersion } from 'services/settings.service'
 
-import { PrimaryButton, ErrorBlock } from 'components/common'
+import { PrimaryButton, ErrorBlock, TextButton } from 'components/common'
 import { ModalContext } from 'contexts/modal.context'
 
 import styles from './AnnouncementModal.module.scss'
@@ -41,39 +41,67 @@ const AnnouncementModal = () => {
   }
 
   const mediaUrl = i18n._(ANNOUNCEMENT.mediaUrl)
-  let mediaContent = null
+  let mediaAndTitle = null
   if (isVideoUrl(mediaUrl)) {
-    mediaContent = (
-      <ReactPlayer
-        url={mediaUrl}
-        className={styles.modalMedia}
-        controls
-        playing
-      />
+    mediaAndTitle = (
+      <>
+        <h4 className={styles.titleTop}>{i18n._(ANNOUNCEMENT.title)}</h4>
+        <ReactPlayer
+          url={mediaUrl}
+          className={styles.modalMedia}
+          controls
+          playing
+        />
+      </>
     )
   } else {
-    mediaContent = (
-      <img
-        className={styles.modalMedia}
-        src={mediaUrl}
-        alt="Modal graphic"
-      ></img>
+    mediaAndTitle = (
+      <>
+        <img
+          className={styles.modalMedia}
+          src={mediaUrl}
+          alt="Modal graphic"
+        ></img>
+        <h4 className={styles.titleCentered}>{i18n._(ANNOUNCEMENT.title)}</h4>
+      </>
+    )
+  }
+
+  // Only render the secondary link if both the text and URL are non-empty
+  const EMPTY_TRANSLATION = '~empty~'
+  const secondaryButtonText = i18n._(ANNOUNCEMENT.secondaryButtonText)
+  const secondaryButtonUrl = i18n._(ANNOUNCEMENT.secondaryButtonUrl)
+  let secondaryLink = null
+  if (
+    secondaryButtonUrl !== EMPTY_TRANSLATION &&
+    secondaryButtonText !== EMPTY_TRANSLATION
+  ) {
+    secondaryLink = (
+      <OutboundLink
+        eventLabel={secondaryButtonUrl}
+        to={secondaryButtonUrl}
+        target="_blank"
+      >
+        <TextButton minButtonWidth onClick={onReadMoreClicked}>
+          {secondaryButtonText}
+        </TextButton>
+      </OutboundLink>
     )
   }
 
   return (
     <div className={styles.modal}>
-      {mediaContent}
-      <h4 className={styles.title}>{i18n._(ANNOUNCEMENT.title)}</h4>
+      {mediaAndTitle}
       <div className={styles.content}>{i18n._(ANNOUNCEMENT.subtext)}</div>
       <div className={styles.options}>
+        {secondaryLink}
         <OutboundLink
-          eventLabel={i18n._(ANNOUNCEMENT.buttonUrl)}
-          to={i18n._(ANNOUNCEMENT.buttonUrl)}
+          eventLabel={i18n._(ANNOUNCEMENT.primaryButtonUrl)}
+          to={i18n._(ANNOUNCEMENT.primaryButtonUrl)}
           target="_blank"
         >
           <PrimaryButton onClick={onReadMoreClicked}>
-            <span>{i18n._(ANNOUNCEMENT.buttonText)}</span>
+            <span>{i18n._(ANNOUNCEMENT.primaryButtonText)}</span>
             <i className={cx('bx', styles.icon, 'bx-right-arrow-alt')}></i>
           </PrimaryButton>
         </OutboundLink>{' '}

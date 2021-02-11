@@ -79,3 +79,8 @@ $border-radius: $button-height / 2;
 %error-btn {
   @include button($error, $red-300, $red-700);
 }
+
+%text-btn {
+  @include button(transparent, $blue-100, $blue-300);
+  color: $blue-900;
+}
