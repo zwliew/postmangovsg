@@ -114,11 +114,27 @@ Example environment variables can be found in
 
 Set the environment variables in a file named `.env` in each folder
 
-### Install and run the app
+### Install dependencies
 
 ```bash
 cd postmangovsg
 npm install
+```
+
+### Compile frontend translations
+
+[lingui](https://lingui.js.org/) is used for internationalization. Read [this](frontend/src/locales/README.md) for more info.
+
+```bash
+cd postmangovsg/frontend
+npm run extract
+npm run compile
+```
+
+### Run the app
+
+```bash
+cd postmangovsg
 npm run dev
 ```
 
