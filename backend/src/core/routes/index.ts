@@ -18,11 +18,13 @@ import {
   smsCampaignRoutes,
   smsSettingsRoutes,
   smsCallbackRoutes,
+  smsSingleSendRoutes,
 } from '@sms/routes'
 import {
   emailCampaignRoutes,
   emailSettingsRoutes,
   emailCallbackRoutes,
+  emailSingleSendRoutes,
 } from '@email/routes'
 import {
   telegramCampaignRoutes,
@@ -165,4 +167,9 @@ router.use('/callback/email', emailCallbackRoutes)
 router.use('/callback/sms', smsCallbackRoutes)
 
 router.use('/callback/telegram', telegramCallbackRoutes)
+
+router.use('/single/sms', smsSingleSendRoutes)
+
+router.use('/single/email', emailSingleSendRoutes)
+
 export default router

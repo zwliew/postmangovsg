@@ -53,6 +53,20 @@ const getHydratedMessage = async (
   return { body }
 }
 
+// TOOD: Document
+const sendMessage = async (
+  credential: TwilioCredentials,
+  recipient: string,
+  message: string
+): Promise<string | void> => {
+  const twilioService = new TwilioClient(credential)
+  recipient = PhoneNumberService.normalisePhoneNumber(
+    recipient,
+    config.get('defaultCountry')
+  )
+  return twilioService.send(recipient, message)
+}
+
 /**
  *  Sends a templated sms to the campaign admin using the associated credentials
  * @param campaignId
@@ -67,13 +81,7 @@ const sendCampaignMessage = async (
 ): Promise<string | void> => {
   const msg = await getHydratedMessage(campaignId)
   if (!msg) throw new Error('No message to send')
-
-  const twilioService = new TwilioClient(credential)
-  recipient = PhoneNumberService.normalisePhoneNumber(
-    recipient,
-    config.get('defaultCountry')
-  )
-  return twilioService.send(recipient, msg?.body)
+  return sendMessage(credential, recipient, msg?.body)
 }
 
 /**
@@ -85,12 +93,8 @@ const sendValidationMessage = async (
   recipient: string,
   credential: TwilioCredentials
 ): Promise<string | void> => {
-  const twilioService = new TwilioClient(credential)
-  recipient = PhoneNumberService.normalisePhoneNumber(
-    recipient,
-    config.get('defaultCountry')
-  )
-  return twilioService.send(
+  return sendMessage(
+    credential,
     recipient,
     'Your Twilio credential has been validated.'
   )
@@ -270,6 +274,7 @@ export const SmsService = {
   findCampaign,
   getCampaignDetails,
   getHydratedMessage,
+  sendMessage,
   sendCampaignMessage,
   sendValidationMessage,
   setCampaignCredential,
